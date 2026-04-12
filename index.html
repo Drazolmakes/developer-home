@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>drazolcodes — Mobile Developer</title>
+  <meta name="description" content="Independent mobile app developer building mindfulness and wellness apps for Android." />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #050510;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #1565C0; opacity: 0.07; top: -200px; left: -200px; animation: drift1 14s ease-in-out infinite alternate; }
+    .blob-2 { width: 500px; height: 500px; background: #6A1B9A; opacity: 0.05; bottom: -150px; right: -150px; animation: drift2 17s ease-in-out infinite alternate; }
+    .blob-3 { width: 400px; height: 400px; background: #00695C; opacity: 0.04; top: 40%; left: 40%; animation: drift3 20s ease-in-out infinite alternate; }
+    @keyframes drift1 { to { transform: translate(80px, 60px); } }
+    @keyframes drift2 { to { transform: translate(-60px, -80px); } }
+    @keyframes drift3 { to { transform: translate(-40px, 40px); } }
+
+    canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+    .page { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo {
+      font-size: 11px;
+      letter-spacing: 6px;
+      font-weight: 300;
+      color: rgba(100,181,246,0.6);
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      font-weight: 300;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 120px 48px 100px;
+      max-width: 900px;
+    }
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 5px;
+      color: rgba(100,181,246,0.45);
+      font-weight: 300;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 200;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+    .hero h1 span { color: rgba(100,181,246,0.7); }
+    .hero p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.35);
+      max-width: 520px;
+    }
+
+    /* ── APPS ── */
+    .section { padding: 80px 48px; }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 40px;
+    }
+
+    .app-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      padding: 32px;
+      border: 1px solid rgba(100,181,246,0.1);
+      border-radius: 20px;
+      background: rgba(13,27,62,0.3);
+      backdrop-filter: blur(10px);
+      max-width: 640px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .app-card:hover {
+      border-color: rgba(100,181,246,0.25);
+      background: rgba(13,27,62,0.5);
+    }
+
+    .app-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #64B5F6 0%, #CE93D8 50%, #80CBC4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+    }
+
+    .app-info { flex: 1; }
+    .app-name {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .app-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.6;
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+    .app-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      font-weight: 300;
+    }
+    .tag-blue  { border: 1px solid rgba(100,181,246,0.3); color: rgba(100,181,246,0.7); }
+    .tag-purple{ border: 1px solid rgba(206,147,216,0.3); color: rgba(206,147,216,0.7); }
+    .tag-teal  { border: 1px solid rgba(128,203,196,0.3); color: rgba(128,203,196,0.7); }
+
+    .app-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(128,203,196,0.7);
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(128,203,196,0.7);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── STACK ── */
+    .stack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      max-width: 640px;
+    }
+    .stack-item {
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.03);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.05);
+      margin: 0 48px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-left {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.15);
+      font-weight: 300;
+    }
+    .footer-right {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.15);
+      font-weight: 300;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 20px 24px; }
+      .nav-links { gap: 20px; }
+      .hero { padding: 80px 24px 60px; }
+      .section { padding: 60px 24px; }
+      .divider { margin: 0 24px; }
+      footer { padding: 32px 24px; }
+      .app-card { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <canvas id="particles"></canvas>
+
+  <div class="page">
+    <nav>
+      <div class="nav-logo">DRAZOLCODES</div>
+      <div class="nav-links">
+        <a href="#apps">Apps</a>
+        <a href="#stack">Stack</a>
+        <a href="https://github.com/drazolcodes" target="_blank">GitHub</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-tag">INDEPENDENT DEVELOPER</div>
+      <h1>Building apps<br>people <span>actually use.</span></h1>
+      <p>I design and develop mobile applications focused on health, mindfulness, and everyday utility. Based in India, building for the world.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- APPS -->
+    <section class="section" id="apps">
+      <div class="section-label">APPS</div>
+      <div class="app-card">
+        <div class="app-icon">AURIC</div>
+        <div class="app-info">
+          <div class="app-name">AURIC</div>
+          <div class="app-desc">
+            Science-backed breathing exercises to calm your mind and body.
+            Features guided sessions, global leaderboard, and multi-language support.
+          </div>
+          <div class="app-tags">
+            <span class="tag tag-blue">Flutter</span>
+            <span class="tag tag-purple">Supabase</span>
+            <span class="tag tag-teal">Android</span>
+          </div>
+          <div class="app-status">
+            <div class="status-dot"></div>
+            IN DEVELOPMENT
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- STACK -->
+    <section class="section" id="stack">
+      <div class="section-label">TECH STACK</div>
+      <div class="stack-grid">
+        <div class="stack-item">Flutter</div>
+        <div class="stack-item">Dart</div>
+        <div class="stack-item">Supabase</div>
+        <div class="stack-item">PostgreSQL</div>
+        <div class="stack-item">Android</div>
+        <div class="stack-item">RevenueCat</div>
+        <div class="stack-item">GitHub</div>
+        <div class="stack-item">Firebase</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+      <div class="footer-left">© 2026 DRAZOLCODES</div>
+      <div class="footer-right">INDIA</div>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let W, H, pts;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    function init() {
+      pts = Array.from({length: 25}, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.4 + 0.3,
+        vy: -(Math.random() * 0.25 + 0.08),
+        o: Math.random() * 0.1 + 0.02,
+      }));
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100,181,246,${p.o})`;
+        ctx.fill();
+        p.y += p.vy;
+        if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+      }
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', () => { resize(); init(); });
+    resize(); init(); draw();
+  </script>
+</body>
+</html>
