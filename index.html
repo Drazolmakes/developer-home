@@ -183,6 +183,14 @@
       text-decoration: none;
       transition: all 0.3s ease;
     }
+    /* Disable long-press and text selection on the button */
+    .download-btn {
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none;   /* Safari */
+      user-select: none;           /* Standard syntax */
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent; /* Remove the blue tap box on mobile */
+    }
     .download-btn:hover {
       background: rgba(100,181,246,0.2);
       border-color: rgba(100,181,246,0.4);
@@ -260,7 +268,15 @@
             RELEASED
           </div>
           <br>
-          <a href="https://github.com/drazolcodes/auric/releases/latest" download class="download-btn">
+          <div 
+  class="download-btn" 
+  data-url="https://github.com/drazolcodes/auric/releases/download/v1.0.0/app-release.apk"
+  onclick="secureDownload(this)"
+  oncontextmenu="return false;" 
+>
+  DOWNLOAD APK
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+</div>
             DOWNLOAD APK
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           </a>
@@ -305,6 +321,30 @@
         { x: w*0.5, y: h*0.5, r: w*0.3, color: '#004D40', vx: 0.2, vy: -0.3 }
       ];
     }
+
+
+    function secureDownload(element) {
+      const link = element.getAttribute('data-url');
+      
+      // Create a temporary hidden anchor tag
+      const hiddenA = document.createElement('a');
+      hiddenA.href = link;
+      hiddenA.download = "Auric.apk"; // Suggests a filename
+      document.body.appendChild(hiddenA);
+      
+      // Trigger the download
+      hiddenA.click();
+      
+      // Clean up
+      document.body.removeChild(hiddenA);
+    }
+
+    // Disable right-click globally or just for specific elements
+    document.addEventListener('contextmenu', function(e) {
+      if (e.target.classList.contains('download-btn')) {
+        e.preventDefault();
+      }
+    }, false);
 
     function draw() {
       ctx.clearRect(0, 0, w, h);
