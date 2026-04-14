@@ -6,33 +6,39 @@
   <title>drazolcodes — Mobile Developer</title>
   <meta name="description" content="Independent mobile app developer building mindfulness and wellness apps for Android." />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
     body {
-      background: #050510;
+      background: #020208;
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    .blob {
+    /* ── ABSTRACT BACKGROUND ── */
+    #bg-canvas {
       position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      filter: blur(100px); /* This creates the "Smooth" look */
+      opacity: 0.6;
     }
-    .blob-1 { width: 600px; height: 600px; background: #1565C0; opacity: 0.07; top: -200px; left: -200px; animation: drift1 14s ease-in-out infinite alternate; }
-    .blob-2 { width: 500px; height: 500px; background: #6A1B9A; opacity: 0.05; bottom: -150px; right: -150px; animation: drift2 17s ease-in-out infinite alternate; }
-    .blob-3 { width: 400px; height: 400px; background: #00695C; opacity: 0.04; top: 40%; left: 40%; animation: drift3 20s ease-in-out infinite alternate; }
-    @keyframes drift1 { to { transform: translate(80px, 60px); } }
-    @keyframes drift2 { to { transform: translate(-60px, -80px); } }
-    @keyframes drift3 { to { transform: translate(-40px, 40px); } }
-
-    canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 
     .page { position: relative; z-index: 1; }
+
+    /* ── SMOOTH ENTRANCE ANIMATION ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section { 
+      animation: fadeInUp 1s ease forwards;
+    }
 
     /* ── NAV ── */
     nav {
@@ -40,216 +46,63 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .nav-logo {
-      font-size: 11px;
-      letter-spacing: 6px;
-      font-weight: 300;
-      color: rgba(100,181,246,0.6);
-    }
-    .nav-links { display: flex; gap: 32px; }
+    .nav-logo { font-size: 11px; letter-spacing: 6px; font-weight: 300; color: #64B5F6; }
     .nav-links a {
       font-size: 11px;
       letter-spacing: 2px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.4);
       text-decoration: none;
-      font-weight: 300;
-      transition: color 0.2s;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .nav-links a:hover { color: rgba(255,255,255,0.7); }
+    .nav-links a:hover { color: #fff; transform: translateY(-1px); }
 
     /* ── HERO ── */
-    .hero {
-      padding: 120px 48px 100px;
-      max-width: 900px;
-    }
-    .hero-tag {
-      font-size: 11px;
-      letter-spacing: 5px;
-      color: rgba(100,181,246,0.45);
-      font-weight: 300;
-      margin-bottom: 24px;
-    }
+    .hero { padding: 140px 48px 100px; max-width: 900px; }
     .hero h1 {
-      font-size: clamp(42px, 6vw, 72px);
+      font-size: clamp(40px, 8vw, 80px);
       font-weight: 200;
-      line-height: 1.1;
-      letter-spacing: -2px;
-      color: #fff;
-      margin-bottom: 28px;
-    }
-    .hero h1 span { color: rgba(100,181,246,0.7); }
-    .hero p {
-      font-size: 16px;
-      font-weight: 300;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.35);
-      max-width: 520px;
+      line-height: 1;
+      letter-spacing: -3px;
+      margin-bottom: 30px;
     }
 
-    /* ── APPS ── */
-    .section { padding: 80px 48px; }
-    .section-label {
-      font-size: 10px;
-      letter-spacing: 5px;
-      color: rgba(255,255,255,0.2);
-      margin-bottom: 40px;
-    }
-
+    /* ── APP CARD ── */
     .app-card {
       display: flex;
-      align-items: flex-start;
-      gap: 28px;
-      padding: 32px;
-      border: 1px solid rgba(100,181,246,0.1);
-      border-radius: 20px;
-      background: rgba(13,27,62,0.3);
-      backdrop-filter: blur(10px);
-      max-width: 640px;
-      transition: border-color 0.3s, background 0.3s;
+      align-items: center;
+      gap: 32px;
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.02);
+      backdrop-filter: blur(20px);
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
     .app-card:hover {
-      border-color: rgba(100,181,246,0.25);
-      background: rgba(13,27,62,0.5);
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(100,181,246,0.3);
+      transform: scale(1.02);
     }
 
     .app-icon {
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
-      flex-shrink: 0;
-      /* Remove the old gradient background */
-      background-image: url('icon.png'); /* Put your filename here */
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* This ensures the image looks crisp */
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    .app-info { flex: 1; }
-    .app-name {
-      font-size: 22px;
-      font-weight: 300;
-      letter-spacing: 2px;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-    .app-desc {
-      font-size: 13px;
-      color: rgba(255,255,255,0.35);
-      line-height: 1.6;
-      font-weight: 300;
-      margin-bottom: 16px;
-    }
-    .app-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .tag {
-      padding: 4px 12px;
+      width: 80px;
+      height: 80px;
       border-radius: 20px;
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      font-weight: 300;
-    }
-    .tag-blue  { border: 1px solid rgba(100,181,246,0.3); color: rgba(100,181,246,0.7); }
-    .tag-purple{ border: 1px solid rgba(206,147,216,0.3); color: rgba(206,147,216,0.7); }
-    .tag-teal  { border: 1px solid rgba(128,203,196,0.3); color: rgba(128,203,196,0.7); }
-
-    .app-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 4px;
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: rgba(128,203,196,0.7);
-    }
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(128,203,196,0.7);
-      animation: blink 2s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    /* ── STACK ── */
-    .stack-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      max-width: 640px;
-    }
-    .stack-item {
-      padding: 10px 20px;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(255,255,255,0.03);
-      font-size: 12px;
-      font-weight: 300;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.4);
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      height: 1px;
-      background: rgba(255,255,255,0.05);
-      margin: 0 48px;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 40px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .footer-left {
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.15);
-      font-weight: 300;
-    }
-    .footer-right {
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.15);
-      font-weight: 300;
-    }
-
-    .download-btn {
-      display: inline-flex;
-      align-items: center;
-      margin-top: 24px;
-      padding: 10px 20px;
-      border-radius: 12px;
-      background: rgba(100,181,246,0.1);
-      border: 1px solid rgba(100,181,246,0.2);
-      color: rgba(100,181,246,0.9);
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .download-btn:hover {
-      background: rgba(100,181,246,0.2);
-      border-color: rgba(100,181,246,0.4);
-      transform: translateY(-2px);
+      background-image: url('icon.png');
+      background-size: cover;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      .hero { padding: 100px 24px; }
+      .app-card { flex-direction: column; align-items: flex-start; padding: 24px; }
       nav { padding: 20px 24px; }
-      .nav-links { gap: 20px; }
-      .hero { padding: 80px 24px 60px; }
-      .section { padding: 60px 24px; }
-      .divider { margin: 0 24px; }
-      footer { padding: 32px 24px; }
-      .app-card { flex-direction: column; }
     }
   </style>
 </head>
@@ -257,8 +110,7 @@
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
-  <canvas id="particles"></canvas>
-
+  <canvas id="bg-canvas"></canvas>
   <div class="page">
     <nav>
       <div class="nav-logo">DRAZOLCODES</div>
@@ -333,37 +185,45 @@
   </div>
 
   <script>
-    const canvas = document.getElementById('particles');
+    const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-    let W, H, pts;
+    let w, h, particles = [];
 
-    function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    }
     function init() {
-      pts = Array.from({length: 25}, () => ({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        r: Math.random() * 1.4 + 0.3,
-        vy: -(Math.random() * 0.25 + 0.08),
-        o: Math.random() * 0.1 + 0.02,
-      }));
+      w = canvas.width = window.innerWidth / 2; // Low res for better blur performance
+      h = canvas.height = window.innerHeight / 2;
+      particles = [
+        { x: w*0.2, y: h*0.2, r: w*0.4, color: '#1565C0', vx: 0.5, vy: 0.3 },
+        { x: w*0.8, y: h*0.7, r: w*0.5, color: '#6A1B9A', vx: -0.4, vy: -0.2 },
+        { x: w*0.5, y: h*0.5, r: w*0.3, color: '#00695C', vx: 0.3, vy: -0.4 }
+      ];
     }
+
     function draw() {
-      ctx.clearRect(0, 0, W, H);
-      for (const p of pts) {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
         ctx.beginPath();
+        let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        grad.addColorStop(0, p.color);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100,181,246,${p.o})`;
         ctx.fill();
+
+        // Move particles
+        p.x += p.vx;
         p.y += p.vy;
-        if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
-      }
+
+        // Bounce
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+      });
       requestAnimationFrame(draw);
     }
-    window.addEventListener('resize', () => { resize(); init(); });
-    resize(); init(); draw();
+
+    window.addEventListener('resize', init);
+    init();
+    draw();
   </script>
 </body>
 </html>
