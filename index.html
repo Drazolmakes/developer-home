@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>drazolcodes — Mobile Developer</title>
-  <meta name="description" content="Independent mobile app developer building mindfulness and wellness apps for Android." />
+  <meta name="description" content="Independent mobile app developer building mindfulness and wellness apps." />
   <link rel="icon" type="image/png" href="icon.png">
   <style>
     /* ── RESET & BASE ── */
@@ -100,7 +100,7 @@
       max-width: 520px;
     }
 
-    /* ── APPS ── */
+    /* ── APP CARD ── */
     .section { padding: 80px 48px; }
     .section-label {
       font-size: 10px;
@@ -170,6 +170,7 @@
       box-shadow: 0 0 10px #64B5F6;
     }
 
+    /* ── DOWNLOAD BUTTON & STEALTH ── */
     .download-btn {
       display: inline-flex;
       align-items: center;
@@ -182,12 +183,38 @@
       letter-spacing: 2px;
       text-decoration: none;
       transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .download-btn:hover {
       background: rgba(100,181,246,0.2);
       border-color: rgba(100,181,246,0.4);
       transform: translateY(-2px);
     }
+
+    /* ── WARNING TOAST ── */
+    #download-warning {
+      position: fixed;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 50, 50, 0.1);
+      border: 1px solid rgba(255, 50, 50, 0.3);
+      backdrop-filter: blur(15px);
+      padding: 16px 24px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 999;
+      width: max-content;
+      max-width: 90vw;
+    }
+    #download-warning.show { bottom: 40px; }
+    .warning-text { font-size: 12px; color: rgba(255, 255, 255, 0.8); letter-spacing: 1px; }
 
     /* ── TECH STACK ── */
     .stack-grid { display: flex; flex-wrap: wrap; gap: 12px; max-width: 640px; }
@@ -227,6 +254,11 @@
 
   <canvas id="bg-canvas"></canvas>
 
+  <div id="download-warning">
+    <span style="color:#ff5252">⚠️</span>
+    <span class="warning-text">Download blocked. Please disable Ad-Blockers or allow popups.</span>
+  </div>
+
   <div class="page">
     <nav>
       <div class="nav-logo">DRAZOLCODES</div>
@@ -260,10 +292,16 @@
             RELEASED
           </div>
           <br>
-          <a href="https://github.com/drazolcodes/auric/releases/latest" download class="download-btn">
-            DOWNLOAD APK
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          </a>
+          <div 
+            id="dl-btn"
+            class="download-btn" 
+            data-url="https://github.com/drazolcodes/developer-home/releases/download/v1.0.0/app-release.apk"
+            onclick="secureDownload(this)"
+            oncontextmenu="return false;" 
+          >
+            <span id="btn-text">DOWNLOAD APK</span>
+            <svg id="btn-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </div>
         </div>
       </div>
     </section>
@@ -292,6 +330,7 @@
   </div>
 
   <script>
+    /* ── BACKGROUND ANIMATION ── */
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let w, h, particles = [];
@@ -316,14 +355,47 @@
         ctx.fillStyle = grad;
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
-
-        p.x += p.vx;
-        p.y += p.vy;
-
+        p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
       });
       requestAnimationFrame(draw);
+    }
+
+    /* ── STEALTH DOWNLOAD LOGIC ── */
+    function secureDownload(element) {
+      const url = element.getAttribute('data-url');
+      const btnText = document.getElementById('btn-text');
+      
+      btnText.innerText = "STARTING...";
+      element.style.opacity = "0.5";
+      element.style.pointerEvents = "none";
+
+      const hiddenA = document.createElement('a');
+      hiddenA.href = url;
+      hiddenA.target = "_blank";
+      hiddenA.download = "Auric.apk";
+      document.body.appendChild(hiddenA);
+      
+      try {
+        hiddenA.click();
+      } catch (err) {
+        showWarning();
+      }
+      
+      setTimeout(() => {
+        document.body.removeChild(hiddenA);
+        btnText.innerText = "DOWNLOAD APK";
+        element.style.opacity = "1";
+        element.style.pointerEvents = "all";
+        showWarning(); // Trigger warning as a fallback check
+      }, 3000);
+    }
+
+    function showWarning() {
+      const warning = document.getElementById('download-warning');
+      warning.classList.add('show');
+      setTimeout(() => warning.classList.remove('show'), 6000);
     }
 
     window.addEventListener('resize', init);
