@@ -220,6 +220,26 @@
       font-weight: 300;
     }
 
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 24px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: rgba(100,181,246,0.1);
+      border: 1px solid rgba(100,181,246,0.2);
+      color: rgba(100,181,246,0.9);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .download-btn:hover {
+      background: rgba(100,181,246,0.2);
+      border-color: rgba(100,181,246,0.4);
+      transform: translateY(-2px);
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       nav { padding: 20px 24px; }
@@ -273,14 +293,19 @@
             <span class="tag tag-purple">Supabase</span>
             <span class="tag tag-teal">Android</span>
           </div>
-          <div class="app-status">
-            <div class="status-dot"></div>
-            IN DEVELOPMENT
+          
+          <div class="app-status" style="color: rgba(100,181,246,0.8);">
+            <div class="status-dot" style="background: rgba(100,181,246,0.8);"></div>
+            RELEASED
           </div>
+
+          <a href="path-to-your-app/auric-release.apk" download class="download-btn">
+            DOWNLOAD
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </a>
         </div>
       </div>
     </section>
-
     <div class="divider"></div>
 
     <!-- STACK -->
