@@ -32,14 +32,15 @@
 
     .page { position: relative; z-index: 1; }
 
-    /* ── ENTRANCE ANIMATION ── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ── SCROLL REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    section { 
-      animation: fadeInUp 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* ── NAV ── */
@@ -53,13 +54,22 @@
       top: 0;
       z-index: 100;
       border-bottom: 1px solid rgba(255,255,255,0.03);
+      animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     .nav-logo {
       font-size: 11px;
       letter-spacing: 6px;
       font-weight: 300;
       color: rgba(100,181,246,0.8);
+      transition: color 0.4s ease;
     }
+    .nav-logo:hover { color: #fff; }
+    
     .nav-links { display: flex; gap: 32px; }
     .nav-links a {
       font-size: 11px;
@@ -69,7 +79,7 @@
       font-weight: 300;
       transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .nav-links a:hover { color: #fff; transform: translateY(-1px); }
+    .nav-links a:hover { color: #fff; transform: translateY(-2px); }
 
     /* ── HERO ── */
     .hero {
@@ -83,6 +93,12 @@
       font-weight: 300;
       margin-bottom: 24px;
     }
+    
+    /* Subtle Title Floating Animation */
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
     .hero h1 {
       font-size: clamp(42px, 7vw, 76px);
       font-weight: 200;
@@ -90,6 +106,7 @@
       letter-spacing: -2px;
       color: #fff;
       margin-bottom: 28px;
+      animation: subtleFloat 6s ease-in-out infinite;
     }
     .hero h1 span { color: rgba(100,181,246,0.7); }
     .hero p {
@@ -119,12 +136,14 @@
       background: rgba(255,255,255,0.02);
       backdrop-filter: blur(20px);
       max-width: 720px;
-      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), background 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
+      transform-style: preserve-3d;
+      will-change: transform;
     }
     .app-card:hover {
       background: rgba(255,255,255,0.04);
       border-color: rgba(100,181,246,0.3);
-      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     .app-icon {
@@ -136,9 +155,13 @@
       background-size: cover;
       background-position: center;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .app-card:hover .app-icon {
+      transform: translateZ(20px) scale(1.05);
     }
 
-    .app-info { flex: 1; }
+    .app-info { flex: 1; transform: translateZ(10px); }
     .app-name {
       font-size: 24px;
       font-weight: 300;
@@ -163,14 +186,19 @@
       color: rgba(100,181,246,0.8);
       margin-bottom: 20px;
     }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(100, 181, 246, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(100, 181, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(100, 181, 246, 0); }
+    }
     .status-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
       background: #64B5F6;
-      box-shadow: 0 0 10px #64B5F6;
+      animation: pulse 2s infinite;
     }
 
-    /* ── DOWNLOAD BUTTON & STEALTH ── */
+    /* ── DOWNLOAD BUTTON ── */
     .download-btn {
       display: inline-flex;
       align-items: center;
@@ -182,16 +210,16 @@
       font-size: 11px;
       letter-spacing: 2px;
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       cursor: pointer;
       user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-tap-highlight-color: transparent;
     }
     .download-btn:hover {
       background: rgba(100,181,246,0.2);
-      border-color: rgba(100,181,246,0.4);
-      transform: translateY(-2px);
+      border-color: rgba(100,181,246,0.6);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 20px rgba(100,181,246,0.15);
+      color: #fff;
     }
 
     /* ── WARNING TOAST ── */
@@ -226,6 +254,15 @@
       font-size: 12px;
       font-weight: 300;
       color: rgba(255,255,255,0.4);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      cursor: default;
+    }
+    .stack-item:hover {
+      color: #fff;
+      border-color: rgba(100,181,246,0.5);
+      background: rgba(100,181,246,0.1);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 15px rgba(0,0,0,0.2);
     }
 
     .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 0 48px; }
@@ -269,17 +306,17 @@
       </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero reveal">
       <div class="hero-tag">INDEPENDENT DEVELOPER</div>
       <h1>Building apps<br>people <span>actually use.</span></h1>
       <p>I design and develop mobile applications focused on health, mindfulness, and everyday utility. Based in India, building for the world.</p>
     </section>
 
-    <div class="divider"></div>
+    <div class="divider reveal"></div>
 
-    <section class="section" id="apps">
+    <section class="section reveal" id="apps">
       <div class="section-label">RELEASED</div>
-      <div class="app-card">
+      <div class="app-card" id="auric-card">
         <div class="app-icon"></div>
         <div class="app-info">
           <div class="app-name">AURIC</div>
@@ -306,9 +343,9 @@
       </div>
     </section>
 
-    <div class="divider"></div>
+    <div class="divider reveal"></div>
 
-    <section class="section" id="stack">
+    <section class="section reveal" id="stack">
       <div class="section-label">TECH STACK</div>
       <div class="stack-grid">
         <div class="stack-item">Flutter</div>
@@ -321,15 +358,52 @@
       </div>
     </section>
 
-    <div class="divider"></div>
+    <div class="divider reveal"></div>
 
-    <footer>
+    <footer class="reveal">
       <div>© 2026 DRAZOLCODES</div>
       <div>INDIA</div>
     </footer>
   </div>
 
   <script>
+    /* ── SCROLL REVEAL LOGIC ── */
+    const revealElements = document.querySelectorAll('.reveal');
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          // Optional: Stop observing once revealed
+          // scrollObserver.unobserve(entry.target); 
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach((el) => scrollObserver.observe(el));
+
+    /* ── 3D DYNAMIC APP CARD TILT ── */
+    const appCard = document.getElementById('auric-card');
+    appCard.addEventListener('mousemove', (e) => {
+      // Only apply tilt on larger screens to avoid weird mobile touch behavior
+      if (window.innerWidth > 768) {
+        const rect = appCard.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element
+        const y = e.clientY - rect.top;  // y position within the element
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // Calculate rotation (max 4 degrees to keep it subtle)
+        const rotateX = ((y - centerY) / centerY) * -4; 
+        const rotateY = ((x - centerX) / centerX) * 4;
+        
+        appCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      }
+    });
+
+    appCard.addEventListener('mouseleave', () => {
+      appCard.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+    });
+
     /* ── BACKGROUND ANIMATION ── */
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
@@ -339,9 +413,9 @@
       w = canvas.width = window.innerWidth / 2;
       h = canvas.height = window.innerHeight / 2;
       particles = [
-        { x: w*0.2, y: h*0.2, r: w*0.4, color: '#1565C0', vx: 0.4, vy: 0.2 },
-        { x: w*0.8, y: h*0.7, r: w*0.5, color: '#4A148C', vx: -0.3, vy: -0.2 },
-        { x: w*0.5, y: h*0.5, r: w*0.3, color: '#004D40', vx: 0.2, vy: -0.3 }
+        { x: w*0.2, y: h*0.2, r: w*0.4, color: '#1565C0', vx: 0.2, vy: 0.1 },
+        { x: w*0.8, y: h*0.7, r: w*0.5, color: '#4A148C', vx: -0.15, vy: -0.1 },
+        { x: w*0.5, y: h*0.5, r: w*0.3, color: '#004D40', vx: 0.1, vy: -0.15 }
       ];
     }
 
