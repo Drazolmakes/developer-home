@@ -413,7 +413,7 @@
     window.switchLeaderboardTab = (app, el) => { document.querySelectorAll('.lb-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); loadLiveLeaderboard(app); };
     loadLiveLeaderboard('auric');
 
-    /* ── AI CAT CHATBOT LOGIC (GEMINI API) ── */
+        /* ── CAT CHATBOT LOGIC (GEMINI API - TESTING ONLY) ── */
     const chatWindow = document.getElementById('chat-window');
     const chatToggle = document.getElementById('chat-toggle');
     const chatMessages = document.getElementById('chat-messages');
@@ -422,13 +422,12 @@
     let chatOpen = false;
     let hasGreeted = false;
 
-    // YOUR FREE GEMINI API KEY GOES HERE
+    // PASTE YOUR NEW API KEY HERE FOR LOCAL TESTING
+    // DO NOT PUSH THIS TO GITHUB
     const GEMINI_API_KEY = 'AIzaSyBFeMUgTGuZyHAerkqlTuqnI2Q115ecuNA'; 
 
-    // This tells the AI who it is and how to act
     const systemPrompt = "You are Nimbus, a zen cat mascot for a mindfulness app called Auric. You are calm, slightly philosophical, and occasionally use cat sounds (like purr or meow). You help users relax. Keep your answers very short (1 or 2 sentences max). Do not use emojis excessively.";
 
-    // We store the conversation history so Nimbus remembers what you just said
     let conversationHistory = [];
 
     function toggleChat() {
@@ -455,7 +454,7 @@
       const row = document.createElement('div');
       row.className = `msg-row ${sender}`;
       
-      // Basic markdown parsing for bold and italics if the AI uses them
+      // Basic markdown parsing so the AI can use bold/italics
       let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>');
       
       row.innerHTML = `<div class="msg-bubble">${formattedText}</div>`;
@@ -482,7 +481,6 @@
     }
 
     async function sendUserMessage() {
-      async function sendUserMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
       
@@ -494,7 +492,6 @@
       conversationHistory.push({ role: "user", parts: [{ text: text }] });
 
       try {
-        // FIXED BUG: 'parts' must be an array for system_instruction
         const payload = {
           system_instruction: { parts: [{ text: systemPrompt }] },
           contents: conversationHistory
@@ -510,16 +507,16 @@
         
         removeTypingIndicator();
 
-        // Better error logging to see exactly why it fails
+        // Error catching to show in console if Google rejects it
         if (!response.ok) {
-            console.error("Google API Rejected the request:", data);
+            console.error("Google API Rejected:", data);
             throw new Error(data.error?.message || "API Error");
         }
 
         if (data.candidates && data.candidates[0].content) {
           const botReply = data.candidates[0].content.parts[0].text;
           appendMessage("bot", botReply);
-          // Add bot reply to memory so Nimbus remembers
+          // Save bot reply so it remembers the context
           conversationHistory.push({ role: "model", parts: [{ text: botReply }] });
         } else {
           appendMessage("bot", "*purrs confusedly* My cosmic connection dropped.");
