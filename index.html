@@ -40,13 +40,19 @@
     .hero h1 span { background: linear-gradient(90deg, #64B5F6, #BA68C8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero p { font-size: 20px; font-weight: 300; line-height: 1.8; color: rgba(255,255,255,0.45); max-width: 600px; }
 
-    /* ── APP CARD & FEATURES ── */
+    /* ── APP CARD SHOWCASE (WITH REVIEWS) ── */
     .section { padding: 100px 48px; }
     .section-label { font-size: 13px; letter-spacing: 6px; color: rgba(255,255,255,0.3); margin-bottom: 48px; }
-    .app-card { display: flex; align-items: flex-start; gap: 40px; padding: 48px; border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; background: rgba(255,255,255,0.02); backdrop-filter: blur(20px); max-width: 850px; transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), background 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease; transform-style: preserve-3d; will-change: transform; }
+
+    .app-showcase-wrapper { display: flex; align-items: center; gap: 40px; max-width: 1200px; }
+    
+    .app-card { flex: 1.5; display: flex; align-items: flex-start; gap: 40px; padding: 48px; border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; background: rgba(255,255,255,0.02); backdrop-filter: blur(20px); transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), background 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease; transform-style: preserve-3d; will-change: transform; }
     .app-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(186, 104, 200, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .app-icon { width: 100px; height: 100px; border-radius: 24px; flex-shrink: 0; background-image: url('icon.png'); background-color: #111116; background-size: cover; background-position: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-    .app-card:hover .app-icon { transform: translateZ(20px) scale(1.05); }
+    
+    @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .app-icon { width: 100px; height: 100px; border-radius: 24px; flex-shrink: 0; background-image: url('icon.png'); background-color: #111116; background-size: cover; background-position: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); animation: iconFloat 4s ease-in-out infinite; }
+    .app-card:hover .app-icon { animation: none; transform: translateZ(20px) scale(1.05); }
+    
     .app-info { flex: 1; transform: translateZ(10px); width: 100%; }
     .app-name { font-size: 32px; font-weight: 300; letter-spacing: 2px; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; }
     .app-status { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 2px; color: #BA68C8; background: rgba(186, 104, 200, 0.1); padding: 6px 12px; border-radius: 20px; }
@@ -57,18 +63,41 @@
     .feature-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 300; }
     .feature-item svg { color: #BA68C8; flex-shrink: 0; }
 
-    /* ── ACTION BUTTONS & PREVIEW ── */
+    /* Action Buttons */
     .action-buttons { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
     .download-btn { display: inline-flex; align-items: center; padding: 16px 32px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; letter-spacing: 2px; font-weight: 500; text-decoration: none; transition: all 0.4s ease; cursor: pointer; user-select: none; }
     .download-btn:hover { background: rgba(186, 104, 200, 0.15); border-color: rgba(186, 104, 200, 0.6); transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(186, 104, 200, 0.2); }
     .preview-btn { display: inline-flex; align-items: center; padding: 16px 32px; border-radius: 16px; background: transparent; border: 1px solid rgba(186, 104, 200, 0.4); color: #BA68C8; font-size: 14px; letter-spacing: 2px; font-weight: 500; cursor: pointer; transition: all 0.4s ease; }
     .preview-btn:hover { background: rgba(186, 104, 200, 0.1); color: #fff; transform: translateY(-3px); }
+    
+    /* Inline Preview */
     .inline-preview-wrapper { display: none; flex-direction: column; align-items: center; width: 100%; margin-top: 32px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); }
     .inline-preview-wrapper.active { display: flex; animation: fadeIn 0.5s ease forwards; }
     .breath-circle-container { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
     .breath-circle { width: 80px; height: 80px; border-radius: 50%; background: rgba(186, 104, 200, 0.15); border: 1px solid rgba(186, 104, 200, 0.4); box-shadow: 0 0 30px rgba(186, 104, 200, 0.2); transition: all 5s ease-in-out; }
     .breath-circle.inhale { width: 200px; height: 200px; background: rgba(186, 104, 200, 0.3); box-shadow: 0 0 60px rgba(186, 104, 200, 0.4); }
     .breath-timer-text { position: absolute; font-size: 12px; letter-spacing: 4px; color: rgba(255,255,255,0.8); font-weight: 400; }
+
+    /* ── FLOATING REVIEWS COLUMN ── */
+    .reviews-column { flex: 0.8; display: flex; flex-direction: column; gap: 20px; }
+    .review-bubble {
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(186, 104, 200, 0.2);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: floatReview 6s ease-in-out infinite alternate;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .review-bubble.active { opacity: 1; transform: translateY(0); transition: opacity 0.8s ease; }
+    
+    @keyframes floatReview { 0% { transform: translateY(8px) rotate(0deg); } 100% { transform: translateY(-8px) rotate(1.5deg); } }
+    
+    .review-stars { color: #FFB300; font-size: 12px; margin-bottom: 10px; letter-spacing: 2px; }
+    .review-text { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 12px; font-style: italic; }
+    .review-user { font-size: 12px; color: #BA68C8; letter-spacing: 1px; font-weight: 400; }
 
     /* ── LIVE LEADERBOARD WITH TABS ── */
     .leaderboard-wrapper { max-width: 600px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; backdrop-filter: blur(10px); }
@@ -79,7 +108,6 @@
     .lb-live-dot { width: 6px; height: 6px; background: #4CAF50; border-radius: 50%; animation: pulse 2s infinite; }
     .lb-live-badge.offline .lb-live-dot { background: rgba(255,255,255,0.3); animation: none; }
 
-    /* App Tabs */
     .lb-tabs { display: flex; gap: 24px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; }
     .lb-tab { font-size: 11px; letter-spacing: 2px; color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; padding-bottom: 4px; position: relative; }
     .lb-tab:hover { color: rgba(255,255,255,0.8); }
@@ -114,6 +142,11 @@
     footer { padding: 60px 48px; display: flex; justify-content: space-between; font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.2); }
 
     /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .app-showcase-wrapper { flex-direction: column; }
+      .reviews-column { width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: center; }
+      .review-bubble { width: 100%; max-width: 320px; }
+    }
     @media (max-width: 768px) {
       nav { padding: 24px; flex-direction: column; gap: 20px; }
       .hero { padding: 100px 24px 60px; }
@@ -161,35 +194,42 @@
 
     <section class="section reveal" id="apps">
       <div class="section-label">LATEST RELEASE</div>
-      <div class="app-card" id="auric-card">
-        <div class="app-icon"></div>
-        <div class="app-info">
-          <div class="app-name">AURIC <span class="app-status"><span class="status-dot"></span> LIVE</span></div>
-          <div class="app-desc">A minimalist approach to mindfulness. Reclaim your focus in a world of noise with clean, science-backed breathing cycles.</div>
+      
+      <div class="app-showcase-wrapper">
+        <div class="app-card" id="auric-card">
+          <div class="app-icon"></div>
+          <div class="app-info">
+            <div class="app-name">AURIC <span class="app-status"><span class="status-dot"></span> LIVE</span></div>
+            <div class="app-desc">A minimalist approach to mindfulness. Reclaim your focus in a world of noise with clean, science-backed breathing cycles.</div>
 
-          <div class="feature-grid">
-            <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 6 Science-Backed Exercises</div>
-            <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Custom Pro Controls</div>
-            <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Seamless & Aesthetic UI</div>
-            <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Offline Mode Ready</div>
-          </div>
-          
-          <div class="action-buttons">
-            <div id="dl-btn" class="download-btn" data-url="https://github.com/drazolcodes/developer-home/releases/latest/download/app-release.apk" onclick="triggerModalDownload(this)">
-              <span>DOWNLOAD APK</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <div class="feature-grid">
+              <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 6 Science-Backed Exercises</div>
+              <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Custom Pro Controls</div>
+              <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Seamless & Aesthetic UI</div>
+              <div class="feature-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Offline Mode Ready</div>
             </div>
-            <button id="preview-btn" class="preview-btn">PREVIEW EXERCISE</button>
-          </div>
-
-          <div id="inline-preview-wrapper" class="inline-preview-wrapper">
-            <div class="breath-circle-container">
-              <div id="preview-circle" class="breath-circle"></div>
-              <div id="preview-text" class="breath-timer-text">READY</div>
+            
+            <div class="action-buttons">
+              <div id="dl-btn" class="download-btn" data-url="https://github.com/drazolcodes/developer-home/releases/latest/download/app-release.apk" onclick="triggerModalDownload(this)">
+                <span>DOWNLOAD APK</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              </div>
+              <button id="preview-btn" class="preview-btn">PREVIEW EXERCISE</button>
             </div>
-          </div>
 
+            <div id="inline-preview-wrapper" class="inline-preview-wrapper">
+              <div class="breath-circle-container">
+                <div id="preview-circle" class="breath-circle"></div>
+                <div id="preview-text" class="breath-timer-text">READY</div>
+              </div>
+            </div>
+
+          </div>
         </div>
+
+        <div class="reviews-column" id="reviews-container">
+          </div>
+
       </div>
     </section>
 
@@ -279,7 +319,7 @@
 
     const appCard = document.getElementById('auric-card');
     appCard.addEventListener('mousemove', (e) => {
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > 1024) {
         const rect = appCard.getBoundingClientRect();
         const x = e.clientX - rect.left; const y = e.clientY - rect.top;  
         const centerX = rect.width / 2; const centerY = rect.height / 2;
@@ -297,6 +337,46 @@
       document.getElementById('dynamic-greeting').innerText = greeting + ". Find your focus.";
     }
     setDynamicGreeting();
+
+    /* ── RANDOMIZED FLOATING REVIEWS LOGIC ── */
+    const allReviews = [
+      { text: "The cleanest UI I've ever used. Completely distraction-free.", user: "@mindful_dev" },
+      { text: "Helped me manage my pre-meeting anxiety perfectly.", user: "@sarah_flows" },
+      { text: "Love the custom intervals for box breathing.", user: "@hacker_abhi" },
+      { text: "Finally, a breathing app without annoying subscriptions.", user: "@zen_coder" },
+      { text: "The haptics and sounds are incredibly soothing.", user: "@night_owl" },
+      { text: "My go-to app before writing any code. Pure focus.", user: "@flutter_fan" },
+      { text: "Aesthetically pleasing and it actually works.", user: "@ui_wizard" }
+    ];
+
+    function renderRandomReviews() {
+      const container = document.getElementById('reviews-container');
+      if(!container) return;
+      
+      // Shuffle array and pick top 3
+      const shuffled = allReviews.sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 3);
+      
+      container.innerHTML = selected.map((rev, i) => {
+        // Create variations in margin and delay so they float independently
+        const margins = ['margin-left: 20px', 'margin-right: 40px', 'margin-left: 40px'];
+        const delay = -(i * 2); 
+        return `
+          <div class="review-bubble reveal" style="${margins[i]}; animation-delay: ${delay}s">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-text">"${rev.text}"</div>
+            <div class="review-user">${rev.user}</div>
+          </div>
+        `;
+      }).join('');
+      
+      // Manually trigger observer for the newly added bubbles
+      setTimeout(() => {
+        document.querySelectorAll('.review-bubble.reveal').forEach(el => scrollObserver.observe(el));
+      }, 100);
+    }
+    renderRandomReviews();
+
 
     const previewBtn = document.getElementById('preview-btn');
     const inlinePreviewWrapper = document.getElementById('inline-preview-wrapper');
@@ -351,14 +431,9 @@
     }
 
     /* ── 2. TABBED SUPABASE LEADERBOARD LOGIC ── */
-    
-    // Switch between apps
     function switchLeaderboardTab(appName, element) {
-      // 1. Update active tab UI
       document.querySelectorAll('.lb-tab').forEach(tab => tab.classList.remove('active'));
       element.classList.add('active');
-
-      // 2. Load data based on the selected app
       loadLiveLeaderboard(appName);
     }
 
@@ -368,7 +443,6 @@
       
       container.innerHTML = '<div class="lb-loading">Connecting...</div>';
 
-      // Mock states for unreleased apps
       if (appName === 'focus_flow') {
         badge.classList.add('offline');
         badge.innerHTML = 'IN DEVELOPMENT';
@@ -395,7 +469,6 @@
         return;
       }
 
-      // If Auric, fetch live data
       badge.classList.remove('offline');
       badge.innerHTML = '<div class="lb-live-dot"></div> LIVE SYNC';
 
@@ -442,7 +515,6 @@
       }
     }
     
-    // Init default leaderboard (Auric)
     loadLiveLeaderboard('auric');
 
   </script>
