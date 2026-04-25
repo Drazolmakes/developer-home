@@ -117,6 +117,16 @@
     .lb-rank { font-size: 14px; color: #BA68C8; font-weight: 500; width: 40px; }
     .lb-user { font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 300; flex: 1; }
     .lb-score { font-size: 14px; color: #64B5F6; font-weight: 300; }
+    .lb-footer { 
+      text-align: center; 
+      padding-top: 16px; 
+      margin-top: 16px; 
+      border-top: 1px dashed rgba(255,255,255,0.05); 
+      font-size: 11px; 
+      color: rgba(255,255,255,0.3); 
+      letter-spacing: 2px; 
+      animation: fadeIn 0.8s ease forwards;
+    }
 
     /* ── CAT CHATBOT WIDGET ── */
     .chatbot-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end;}
@@ -368,25 +378,55 @@
       qContent.innerHTML = `<div class="prescription-card"><div class="rx-badge">YOUR PRESCRIPTION</div><div class="rx-app">${appName}</div><div class="rx-title">${exerciseTitle}</div><div class="rx-detail">${detail}</div><div class="rx-desc">${desc}</div><div class="rx-actions">${actionBtn}</div><div style="margin-top: 24px; cursor: pointer; color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 2px;" onclick="openQuiz()">↺ RETAKE ASSESSMENT</div></div>`;
     }
 
-    /* ── SUPABASE LEADERBOARD ── */
+    /* ── SUPABASE LEADERBOARD (WITH SOCIAL PROOF FOOTER) ── */
     async function loadLiveLeaderboard(app) {
-      const c = document.getElementById('lb-rows-container'); const b = document.getElementById('lb-badge');
+      const c = document.getElementById('lb-rows-container');
+      const b = document.getElementById('lb-badge');
+      
       if(app !== 'auric') { 
         b.classList.add('offline'); b.innerHTML='IN DEVELOPMENT'; 
-        c.innerHTML='<div class="lb-loading">Leaderboards will open upon app release.</div>'; return; 
+        c.innerHTML='<div class="lb-loading">Leaderboards will open upon app release.</div>'; 
+        return; 
       }
-      b.classList.remove('offline'); b.innerHTML='<div class="lb-live-dot"></div> LIVE SYNC';
+      
+      b.classList.remove('offline'); 
+      b.innerHTML='<div class="lb-live-dot"></div> LIVE SYNC';
+      
       try {
         if (!window.supabase) throw new Error("Supabase blocked by browser.");
+        
         const supabaseClient = window.supabase.createClient('https://unzjjmesuyrlgauyjvai.supabase.co', 'sb_publishable_Q695Fwg_vWyjxVs5H4i9Qg_dV8bbZiO');
-        const { data, error } = await supabaseClient.from('profiles').select('username, total_minutes').order('total_minutes', { ascending: false }).limit(5);
+        
+        // 1. Get the Top 5 Users
+        const { data, error } = await supabaseClient
+            .from('profiles')
+            .select('username, total_minutes')
+            .order('total_minutes', { ascending: false })
+            .limit(5);
+            
+        // 2. Get the TOTAL count of all users (Super fast query!)
+        const { count, error: countError } = await supabaseClient
+            .from('profiles')
+            .select('*', { count: 'exact', head: true });
+        
         if(error || !data) throw error;
         if(data.length === 0) { c.innerHTML='<div class="lb-loading">No sessions logged yet.</div>'; return; }
-        c.innerHTML = data.map((u,i) => `<div class="lb-row"><div class="lb-rank">0${i+1}</div><div class="lb-user">${u.username||'Breather'}</div><div class="lb-score">${u.total_minutes} min</div></div>`).join('');
-      } catch(e) { c.innerHTML='<div class="lb-loading" style="color: rgba(255,255,255,0.3);">Leaderboard currently syncing...</div>'; }
+        
+        // Build the HTML for the top 5 rows
+        let htmlOutput = data.map((u,i) => `<div class="lb-row"><div class="lb-rank">0${i+1}</div><div class="lb-user">${u.username||'Breather'}</div><div class="lb-score">${u.total_minutes} min</div></div>`).join('');
+        
+        // Build the footer if there are more than 5 users
+        if (!countError && count > 5) {
+            const remainingUsers = count - 5;
+            htmlOutput += `<div class="lb-footer">...AND ${remainingUsers.toLocaleString()} OTHER PRACTITIONERS</div>`;
+        }
+        
+        c.innerHTML = htmlOutput;
+        
+      } catch(e) { 
+        c.innerHTML='<div class="lb-loading" style="color: rgba(255,255,255,0.3);">Leaderboard currently syncing...</div>'; 
+      }
     }
-    window.switchLeaderboardTab = (app, el) => { document.querySelectorAll('.lb-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); loadLiveLeaderboard(app); };
-    loadLiveLeaderboard('auric');
     
   </script>
 </body>
